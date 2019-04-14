@@ -1,0 +1,98 @@
+/*
+Place for styles that concerns to the page itself
+*/
+input {
+    text-align: center;
+}
+
+.h_100 {
+    height: 100%;
+}
+
+.mt_5r {
+    margin-top: 5rem;
+}
+a,
+a:hover,
+a:focus {
+    text-decoration: none;
+}
+
+.header {
+    .container{
+        .row {
+            display: flex;            
+        }
+    }
+}
+
+// .phones {
+//     width: 200px;
+//     height: 70px;
+// }
+
+.dropdown {
+    .dropdown-toggle {
+        border: none !important;
+    }
+    .fa-phone {
+        transform: scaleX(-1);
+    }
+}
+
+    // Buttons
+    .start_block {
+        padding: 0 2rem;
+        h4 {
+            font-weight: 700 !important;
+        }
+        .marquiz__container {
+            a {
+                background-color: #d74444;
+                font-size: unset;
+                margin-top: 2rem;
+                display: inline-block;
+                font-weight: 500;
+                text-align: center;
+                vertical-align: middle;
+                user-select: none;
+                transition: all .2s ease-out;
+                border: 1px solid #d74444;
+                padding: 18px 21px;
+                line-height: 1;
+                cursor: pointer;
+                overflow: hidden;
+                position: relative;
+            }
+        }
+    }
+    
+    .examples {
+        .lightbox {
+            position: relative;
+            .gallery{
+                margin: 1rem 0;
+                img {
+                    width: 100px;
+                    height: 100px;
+                    padding: 0 16px;
+                }
+            }
+        }
+    }
+    .map-container{
+        overflow:hidden;
+        padding-bottom:56.25%;
+        position:relative;
+        height:0;
+        }
+        .map-container iframe{
+        left:0;
+        top:0;
+        height:100%;
+        width:100%;
+        position:absolute;
+        }   
+        footer {
+            margin-top: 7rem;
+        }
