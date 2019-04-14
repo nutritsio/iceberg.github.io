@@ -29,7 +29,7 @@ function styles() {
       autoprefixer()
     ]))
     .pipe($.if(!isProd, $.sourcemaps.write()))
-    .pipe(dest('docs/styles'))
+    .pipe(dest('.tmp/styles'))
     .pipe(server.reload({stream: true}));
 };
 
@@ -39,7 +39,7 @@ function scripts() {
     .pipe($.if(!isProd, $.sourcemaps.init()))
     .pipe($.babel())
     .pipe($.if(!isProd, $.sourcemaps.write('.')))
-    .pipe(dest('docs/scripts'))
+    .pipe(dest('.tmp/scripts'))
     .pipe(server.reload({stream: true}));
 };
 
@@ -62,7 +62,7 @@ function lintTest() {
 
 function html() {
   return src('app/*.html')
-    .pipe($.useref({searchPath: ['docs', 'app', '.']}))
+    .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
     .pipe($.if(/\.js$/, $.uglify({compress: {drop_console: true}})))
     .pipe($.if(/\.css$/, $.postcss([cssnano({safe: true, autoprefixer: false})])))
     .pipe($.if(/\.html$/, $.htmlmin({
@@ -75,18 +75,18 @@ function html() {
       removeScriptTypeAttributes: true,
       removeStyleLinkTypeAttributes: true
     })))
-    .pipe(dest('dist'));
+    .pipe(dest('docs'));
 }
 
 function images() {
   return src('app/images/**/*', { since: lastRun(images) })
     .pipe($.imagemin())
-    .pipe(dest('dist/images'));
+    .pipe(dest('docs/images'));
 };
 
 function fonts() {
   return src('app/fonts/**/*.{eot,svg,ttf,woff,woff2}')
-    .pipe($.if(!isProd, dest('docs/fonts'), dest('dist/fonts')));
+    .pipe($.if(!isProd, dest('.tmp/fonts'), dest('docs/fonts')));
 };
 
 function extras() {
@@ -95,15 +95,15 @@ function extras() {
     '!app/*.html'
   ], {
     dot: true
-  }).pipe(dest('dist'));
+  }).pipe(dest('docs'));
 };
 
 function clean() {
-  return del(['docs', 'dist'])
+  return del(['.tmp', 'docs'])
 }
 
 function measureSize() {
-  return src('dist/**/*')
+  return src('docs/**/*')
     .pipe($.size({title: 'build', gzip: true}));
 }
 
@@ -124,7 +124,7 @@ function startAppServer() {
     notify: false,
     port,
     server: {
-      baseDir: ['docs', 'app'],
+      baseDir: ['.tmp', 'app'],
       routes: {
         '/node_modules': 'node_modules'
       }
@@ -134,7 +134,7 @@ function startAppServer() {
   watch([
     'app/*.html',
     'app/images/**/*',
-    'docs/fonts/**/*'
+    '.tmp/fonts/**/*'
   ]).on('change', server.reload);
 
   watch('app/styles/**/*.scss', styles);
@@ -150,7 +150,7 @@ function startTestServer() {
     server: {
       baseDir: 'test',
       routes: {
-        '/scripts': 'docs/scripts',
+        '/scripts': '.tmp/scripts',
         '/node_modules': 'node_modules'
       }
     }
@@ -161,12 +161,12 @@ function startTestServer() {
   watch('test/spec/**/*.js', lintTest);
 }
 
-function startDistServer() {
+function startdocsServer() {
   server.init({
     notify: false,
     port,
     server: {
-      baseDir: 'dist',
+      baseDir: 'docs',
       routes: {
         '/node_modules': 'node_modules'
       }
@@ -180,7 +180,7 @@ if (isDev) {
 } else if (isTest) {
   serve = series(clean, scripts, startTestServer);
 } else if (isProd) {
-  serve = series(build, startDistServer);
+  serve = series(build, startdocsServer);
 }
 
 exports.serve = serve;
