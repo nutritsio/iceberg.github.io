@@ -4,7 +4,6 @@ bower_components
 
 # compiled output
 /dist
-/docs
 
 # System Files
 .DS_Store
