@@ -29,7 +29,7 @@ function styles() {
       autoprefixer()
     ]))
     .pipe($.if(!isProd, $.sourcemaps.write()))
-    .pipe(dest('.tmp/styles'))
+    .pipe(dest('docs/styles'))
     .pipe(server.reload({stream: true}));
 };
 
@@ -39,7 +39,7 @@ function scripts() {
     .pipe($.if(!isProd, $.sourcemaps.init()))
     .pipe($.babel())
     .pipe($.if(!isProd, $.sourcemaps.write('.')))
-    .pipe(dest('.tmp/scripts'))
+    .pipe(dest('docs/scripts'))
     .pipe(server.reload({stream: true}));
 };
 
@@ -62,7 +62,7 @@ function lintTest() {
 
 function html() {
   return src('app/*.html')
-    .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
+    .pipe($.useref({searchPath: ['docs', 'app', '.']}))
     .pipe($.if(/\.js$/, $.uglify({compress: {drop_console: true}})))
     .pipe($.if(/\.css$/, $.postcss([cssnano({safe: true, autoprefixer: false})])))
     .pipe($.if(/\.html$/, $.htmlmin({
@@ -86,7 +86,7 @@ function images() {
 
 function fonts() {
   return src('app/fonts/**/*.{eot,svg,ttf,woff,woff2}')
-    .pipe($.if(!isProd, dest('.tmp/fonts'), dest('docs/fonts')));
+    .pipe($.if(!isProd, dest('docs/fonts')));
 };
 
 function extras() {
@@ -99,7 +99,7 @@ function extras() {
 };
 
 function clean() {
-  return del(['.tmp', 'docs'])
+  return del(['docs', '.tmp'])
 }
 
 function measureSize() {
@@ -124,7 +124,7 @@ function startAppServer() {
     notify: false,
     port,
     server: {
-      baseDir: ['.tmp', 'app'],
+      baseDir: ['docs', 'app'],
       routes: {
         '/node_modules': 'node_modules'
       }
@@ -134,7 +134,7 @@ function startAppServer() {
   watch([
     'app/*.html',
     'app/images/**/*',
-    '.tmp/fonts/**/*'
+    'docs/fonts/**/*'
   ]).on('change', server.reload);
 
   watch('app/styles/**/*.scss', styles);
@@ -150,7 +150,7 @@ function startTestServer() {
     server: {
       baseDir: 'test',
       routes: {
-        '/scripts': '.tmp/scripts',
+        '/scripts': 'docs/scripts',
         '/node_modules': 'node_modules'
       }
     }
@@ -161,7 +161,7 @@ function startTestServer() {
   watch('test/spec/**/*.js', lintTest);
 }
 
-function startdocsServer() {
+function startDistServer() {
   server.init({
     notify: false,
     port,
@@ -180,7 +180,7 @@ if (isDev) {
 } else if (isTest) {
   serve = series(clean, scripts, startTestServer);
 } else if (isProd) {
-  serve = series(build, startdocsServer);
+  serve = series(build, startDistServer);
 }
 
 exports.serve = serve;
