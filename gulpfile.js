@@ -1,4 +1,4 @@
-// generated on 2019-04-08 using generator-webapp 4.0.0-5
+// generated on 2019-04-15 using generator-webapp 4.0.0-5
 const { src, dest, watch, series, parallel, lastRun } = require('gulp');
 const gulpLoadPlugins = require('gulp-load-plugins');
 const browserSync = require('browser-sync');
@@ -29,7 +29,7 @@ function styles() {
       autoprefixer()
     ]))
     .pipe($.if(!isProd, $.sourcemaps.write()))
-    .pipe(dest('docs/styles'))
+    .pipe(dest('.tmp/styles'))
     .pipe(server.reload({stream: true}));
 };
 
@@ -37,9 +37,9 @@ function scripts() {
   return src('app/scripts/**/*.js')
     .pipe($.plumber())
     .pipe($.if(!isProd, $.sourcemaps.init()))
-    .pipe($.babel())
+    // .pipe($.babel())
     .pipe($.if(!isProd, $.sourcemaps.write('.')))
-    .pipe(dest('docs/scripts'))
+    .pipe(dest('.tmp/scripts'))
     .pipe(server.reload({stream: true}));
 };
 
@@ -62,7 +62,7 @@ function lintTest() {
 
 function html() {
   return src('app/*.html')
-    .pipe($.useref({searchPath: ['docs', 'app', '.']}))
+    .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
     .pipe($.if(/\.js$/, $.uglify({compress: {drop_console: true}})))
     .pipe($.if(/\.css$/, $.postcss([cssnano({safe: true, autoprefixer: false})])))
     .pipe($.if(/\.html$/, $.htmlmin({
@@ -86,7 +86,7 @@ function images() {
 
 function fonts() {
   return src('app/fonts/**/*.{eot,svg,ttf,woff,woff2}')
-    .pipe($.if(!isProd, dest('docs/fonts')));
+    .pipe($.if(!isProd, dest('.tmp/fonts'), dest('docs/fonts')));
 };
 
 function extras() {
@@ -99,7 +99,7 @@ function extras() {
 };
 
 function clean() {
-  return del(['docs', '.tmp'])
+  return del(['.tmp', 'docs'])
 }
 
 function measureSize() {
@@ -124,7 +124,7 @@ function startAppServer() {
     notify: false,
     port,
     server: {
-      baseDir: ['docs', 'app'],
+      baseDir: ['.tmp', 'app'],
       routes: {
         '/node_modules': 'node_modules'
       }
@@ -134,7 +134,7 @@ function startAppServer() {
   watch([
     'app/*.html',
     'app/images/**/*',
-    'docs/fonts/**/*'
+    '.tmp/fonts/**/*'
   ]).on('change', server.reload);
 
   watch('app/styles/**/*.scss', styles);
@@ -150,7 +150,7 @@ function startTestServer() {
     server: {
       baseDir: 'test',
       routes: {
-        '/scripts': 'docs/scripts',
+        '/scripts': '.tmp/scripts',
         '/node_modules': 'node_modules'
       }
     }

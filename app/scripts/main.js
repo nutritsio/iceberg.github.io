@@ -9,7 +9,3 @@ $('.phones .dropdown').click(function(){
     $('.phones .dropdown .dropdown-toggle').text(this.innerHTML);
   });
   
-  // lightbox.option({
-  //   'resizeDuration': 200,
-  //   'wrapAround': true
-  // });
