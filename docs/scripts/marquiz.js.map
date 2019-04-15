@@ -1,0 +1,1 @@
+{"version":3,"names":[],"mappings":"","sources":["marquiz.js"],"sourcesContent":["document.addEventListener('DOMContentLoaded', function() {\r\n    Marquiz.init({ \r\n      id: '5c02f41b4de4050055a57756', \r\n      autoOpen: false, \r\n      autoOpenFreq: 'once', \r\n      openOnExit: false \r\n    });\r\n  });\r\n"],"file":"marquiz.js"}

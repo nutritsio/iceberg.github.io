@@ -1,0 +1,1 @@
+{"version":3,"names":[],"mappings":"","sources":["main.js"],"sourcesContent":["\n$('.phones .dropdown').click(function(){\n    $('.phones .dropdown .dropdown-menu')\n      .toggleClass('show');\n  });\n  \n  $('.phones .dropdown .dropdown-menu .dropdown-item').click(function () {\n  \n    $('.phones .dropdown .dropdown-toggle').text(this.innerHTML);\n  });\n  "],"file":"main.js"}
