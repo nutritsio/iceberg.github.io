@@ -291,6 +291,10 @@ $bgc: #f9f5ec;
     footer {
         .footer_block {
             margin-top: 2rem;
+
+            .contacts {
+                margin-top: 3rem;
+            }
             .map_container {
                 height: 35vw;
                 iframe {
